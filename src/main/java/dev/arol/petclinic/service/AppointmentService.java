@@ -1,7 +1,7 @@
-package com.example.petclinic.service;
+package dev.arol.petclinic.service;
 
-import com.example.petclinic.entity.Appointment;
-import com.example.petclinic.repository.AppointmentRepository;
+import dev.arol.petclinic.entity.Appointment;
+import dev.arol.petclinic.repository.IAppointmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -9,11 +9,11 @@ import java.util.List;
 @Service
 public class AppointmentService {
     
-    private final AppointmentRepository appointmentRepository;
+    private final IAppointmentRepository appointmentRepository;
     private final PetService petService;
 
     @Autowired
-    public AppointmentService(AppointmentRepository appointmentRepository, PetService petService) {
+    public AppointmentService(IAppointmentRepository appointmentRepository, PetService petService) {
         this.appointmentRepository = appointmentRepository;
         this.petService = petService;
     }

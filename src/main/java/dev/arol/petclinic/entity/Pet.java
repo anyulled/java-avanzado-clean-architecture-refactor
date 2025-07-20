@@ -1,4 +1,4 @@
-package com.example.petclinic.entity;
+package dev.arol.petclinic.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;

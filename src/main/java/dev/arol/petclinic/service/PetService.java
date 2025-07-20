@@ -1,7 +1,7 @@
-package com.example.petclinic.service;
+package dev.arol.petclinic.service;
 
-import com.example.petclinic.entity.Pet;
-import com.example.petclinic.repository.PetRepository;
+import dev.arol.petclinic.entity.Pet;
+import dev.arol.petclinic.repository.IPetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -9,10 +9,10 @@ import java.util.List;
 @Service
 public class PetService {
     
-    private final PetRepository petRepository;
+    private final IPetRepository petRepository;
 
     @Autowired
-    public PetService(PetRepository petRepository) {
+    public PetService(IPetRepository petRepository) {
         this.petRepository = petRepository;
     }
 

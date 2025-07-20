@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="PetClinicApplication (H2)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
-    <option name="ACTIVE_PROFILES" value="h2" />
+  <configuration default="false" name="PetClinicApplication (en memoria)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <option name="ACTIVE_PROFILES" value="inmemory" />
     <module name="petclinic-simple" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="dev.arol.petclinic.PetClinicApplication" />
     <method v="2">

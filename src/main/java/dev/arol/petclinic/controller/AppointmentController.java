@@ -1,7 +1,7 @@
-package com.example.petclinic.controller;
+package dev.arol.petclinic.controller;
 
-import com.example.petclinic.entity.Appointment;
-import com.example.petclinic.service.AppointmentService;
+import dev.arol.petclinic.entity.Appointment;
+import dev.arol.petclinic.service.AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
