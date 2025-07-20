@@ -1,0 +1,545 @@
+{
+	"info": {
+		"_postman_id": "12345678-1234-1234-1234-123456789abc",
+		"name": "PetClinic API",
+		"description": "Simple PetClinic REST API collection with comprehensive tests and console logging",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "12345678"
+	},
+	"item": [
+		{
+			"name": "Pets",
+			"item": [
+				{
+					"name": "Create Pet",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Generate random pet data",
+									"const petNames = ['Buddy', 'Max', 'Bella', 'Charlie', 'Luna', 'Cooper', 'Daisy', 'Milo'];",
+									"const species = ['Dog', 'Cat', 'Rabbit', 'Bird', 'Hamster'];",
+									"const owners = ['John Smith', 'Jane Doe', 'Mike Johnson', 'Sarah Wilson', 'David Brown'];",
+									"",
+									"const randomPetName = petNames[Math.floor(Math.random() * petNames.length)];",
+									"const randomSpecies = species[Math.floor(Math.random() * species.length)];",
+									"const randomOwner = owners[Math.floor(Math.random() * owners.length)];",
+									"",
+									"pm.collectionVariables.set('petName', randomPetName);",
+									"pm.collectionVariables.set('petSpecies', randomSpecies);",
+									"pm.collectionVariables.set('petOwner', randomOwner);",
+									"",
+									"console.log('🐾 Creating pet with data:', {",
+									"    name: randomPetName,",
+									"    species: randomSpecies,",
+									"    ownerName: randomOwner",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"console.log('\\n=== CREATE PET TEST RESULTS ===');",
+									"",
+									"// Test status code",
+									"pm.test('Status code is 201 Created', function () {",
+									"    pm.response.to.have.status(201);",
+									"    console.log('✅ Status: 201 Created');",
+									"});",
+									"",
+									"// Test response time",
+									"pm.test('Response time is less than 500ms', function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(500);",
+									"    console.log(`✅ Response time: ${pm.response.responseTime}ms`);",
+									"});",
+									"",
+									"// Parse response",
+									"const responseJson = pm.response.json();",
+									"console.log('📋 Response body:', responseJson);",
+									"",
+									"// Test response structure and content",
+									"pm.test('Response has required fields', function () {",
+									"    pm.expect(responseJson).to.have.property('id');",
+									"    pm.expect(responseJson).to.have.property('name');",
+									"    pm.expect(responseJson).to.have.property('species');",
+									"    pm.expect(responseJson).to.have.property('ownerName');",
+									"    console.log('✅ Response structure is valid');",
+									"});",
+									"",
+									"pm.test('Pet ID is generated', function () {",
+									"    pm.expect(responseJson.id).to.be.a('number');",
+									"    pm.expect(responseJson.id).to.be.greaterThan(0);",
+									"    console.log(`✅ Pet ID generated: ${responseJson.id}`);",
+									"});",
+									"",
+									"pm.test('Pet data matches request', function () {",
+									"    pm.expect(responseJson.name).to.eql(pm.collectionVariables.get('petName'));",
+									"    pm.expect(responseJson.species).to.eql(pm.collectionVariables.get('petSpecies'));",
+									"    pm.expect(responseJson.ownerName).to.eql(pm.collectionVariables.get('petOwner'));",
+									"    console.log('✅ Pet data matches request');",
+									"});",
+									"",
+									"// Store pet ID for subsequent requests",
+									"if (responseJson.id) {",
+									"    pm.collectionVariables.set('petId', responseJson.id);",
+									"    console.log(`💾 Stored pet ID: ${responseJson.id} for future requests`);",
+									"}",
+									"",
+									"console.log('=== END CREATE PET TEST ===\\n');"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{petName}}\",\n    \"species\": \"{{petSpecies}}\",\n    \"ownerName\": \"{{petOwner}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/pets",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"pets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Pets",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"console.log('\\n=== GET ALL PETS TEST RESULTS ===');",
+									"",
+									"// Test status code",
+									"pm.test('Status code is 200 OK', function () {",
+									"    pm.response.to.have.status(200);",
+									"    console.log('✅ Status: 200 OK');",
+									"});",
+									"",
+									"// Test response time",
+									"pm.test('Response time is less than 500ms', function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(500);",
+									"    console.log(`✅ Response time: ${pm.response.responseTime}ms`);",
+									"});",
+									"",
+									"// Parse response",
+									"const responseJson = pm.response.json();",
+									"",
+									"// Test response structure",
+									"pm.test('Response is an array', function () {",
+									"    pm.expect(responseJson).to.be.an('array');",
+									"    console.log(`✅ Response is array with ${responseJson.length} pets`);",
+									"});",
+									"",
+									"// Test if pets exist",
+									"if (responseJson.length > 0) {",
+									"    pm.test('Pets have required fields', function () {",
+									"        const firstPet = responseJson[0];",
+									"        pm.expect(firstPet).to.have.property('id');",
+									"        pm.expect(firstPet).to.have.property('name');",
+									"        pm.expect(firstPet).to.have.property('species');",
+									"        pm.expect(firstPet).to.have.property('ownerName');",
+									"        console.log('✅ Pet structure is valid');",
+									"    });",
+									"    ",
+									"    // Check if our created pet exists",
+									"    const createdPetId = pm.collectionVariables.get('petId');",
+									"    if (createdPetId) {",
+									"        const createdPet = responseJson.find(pet => pet.id == createdPetId);",
+									"        pm.test('Created pet exists in the list', function () {",
+									"            pm.expect(createdPet).to.not.be.undefined;",
+									"            console.log(`✅ Created pet (ID: ${createdPetId}) found in list`);",
+									"        });",
+									"    }",
+									"    ",
+									"    console.log('📋 All pets:');",
+									"    responseJson.forEach((pet, index) => {",
+									"        console.log(`  ${index + 1}. ${pet.name} (${pet.species}) - Owner: ${pet.ownerName} [ID: ${pet.id}]`);",
+									"    });",
+									"} else {",
+									"    console.log('ℹ️ No pets found in the system');",
+									"}",
+									"",
+									"console.log('=== END GET ALL PETS TEST ===\\n');"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/pets",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"pets"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Operations related to pet management"
+		},
+		{
+			"name": "Appointments",
+			"item": [
+				{
+					"name": "Create Appointment - Success",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Generate random appointment data",
+									"const reasons = ['Annual Checkup', 'Vaccination', 'Dental Cleaning', 'Injury Treatment', 'Surgery Consultation', 'Behavioral Issues'];",
+									"const randomReason = reasons[Math.floor(Math.random() * reasons.length)];",
+									"",
+									"// Generate a future date (1-30 days from now)",
+									"const futureDate = new Date();",
+									"futureDate.setDate(futureDate.getDate() + Math.floor(Math.random() * 30) + 1);",
+									"const appointmentDate = futureDate.toISOString();",
+									"",
+									"pm.collectionVariables.set('appointmentReason', randomReason);",
+									"pm.collectionVariables.set('appointmentDate', appointmentDate);",
+									"",
+									"const petId = pm.collectionVariables.get('petId');",
+									"console.log('📅 Creating appointment with data:', {",
+									"    petId: petId,",
+									"    date: appointmentDate,",
+									"    reason: randomReason",
+									"});",
+									"",
+									"if (!petId) {",
+									"    console.warn('⚠️ No pet ID available. Make sure to run \"Create Pet\" first.');",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"console.log('\\n=== CREATE APPOINTMENT (SUCCESS) TEST RESULTS ===');",
+									"",
+									"// Test status code",
+									"pm.test('Status code is 201 Created', function () {",
+									"    pm.response.to.have.status(201);",
+									"    console.log('✅ Status: 201 Created');",
+									"});",
+									"",
+									"// Test response time",
+									"pm.test('Response time is less than 500ms', function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(500);",
+									"    console.log(`✅ Response time: ${pm.response.responseTime}ms`);",
+									"});",
+									"",
+									"// Parse response",
+									"const responseJson = pm.response.json();",
+									"console.log('📋 Response body:', responseJson);",
+									"",
+									"// Test response structure",
+									"pm.test('Response has required fields', function () {",
+									"    pm.expect(responseJson).to.have.property('id');",
+									"    pm.expect(responseJson).to.have.property('petId');",
+									"    pm.expect(responseJson).to.have.property('date');",
+									"    pm.expect(responseJson).to.have.property('reason');",
+									"    console.log('✅ Response structure is valid');",
+									"});",
+									"",
+									"pm.test('Appointment ID is generated', function () {",
+									"    pm.expect(responseJson.id).to.be.a('number');",
+									"    pm.expect(responseJson.id).to.be.greaterThan(0);",
+									"    console.log(`✅ Appointment ID generated: ${responseJson.id}`);",
+									"});",
+									"",
+									"pm.test('Appointment data matches request', function () {",
+									"    pm.expect(responseJson.petId).to.eql(parseInt(pm.collectionVariables.get('petId')));",
+									"    pm.expect(responseJson.reason).to.eql(pm.collectionVariables.get('appointmentReason'));",
+									"    console.log('✅ Appointment data matches request');",
+									"});",
+									"",
+									"// Store appointment ID for future use",
+									"if (responseJson.id) {",
+									"    pm.collectionVariables.set('appointmentId', responseJson.id);",
+									"    console.log(`💾 Stored appointment ID: ${responseJson.id}`);",
+									"}",
+									"",
+									"console.log('=== END CREATE APPOINTMENT (SUCCESS) TEST ===\\n');"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"petId\": {{petId}},\n    \"date\": \"{{appointmentDate}}\",\n    \"reason\": \"{{appointmentReason}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/appointments",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"appointments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Appointment - Invalid Pet",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Use non-existent pet ID",
+									"const invalidPetId = 99999;",
+									"pm.collectionVariables.set('invalidPetId', invalidPetId);",
+									"",
+									"// Generate appointment data",
+									"const futureDate = new Date();",
+									"futureDate.setDate(futureDate.getDate() + 7);",
+									"const appointmentDate = futureDate.toISOString();",
+									"",
+									"pm.collectionVariables.set('invalidAppointmentDate', appointmentDate);",
+									"",
+									"console.log('🚫 Testing appointment creation with invalid pet ID:', invalidPetId);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"console.log('\\n=== CREATE APPOINTMENT (INVALID PET) TEST RESULTS ===');",
+									"",
+									"// Test status code",
+									"pm.test('Status code is 400 Bad Request', function () {",
+									"    pm.response.to.have.status(400);",
+									"    console.log('✅ Status: 400 Bad Request (as expected)');",
+									"});",
+									"",
+									"// Test response time",
+									"pm.test('Response time is less than 500ms', function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(500);",
+									"    console.log(`✅ Response time: ${pm.response.responseTime}ms`);",
+									"});",
+									"",
+									"// Test error message",
+									"const responseText = pm.response.text();",
+									"console.log('📋 Error message:', responseText);",
+									"",
+									"pm.test('Error message contains pet ID reference', function () {",
+									"    pm.expect(responseText).to.include('Pet with ID');",
+									"    pm.expect(responseText).to.include('does not exist');",
+									"    console.log('✅ Error message is descriptive and helpful');",
+									"});",
+									"",
+									"console.log('=== END CREATE APPOINTMENT (INVALID PET) TEST ===\\n');"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"petId\": {{invalidPetId}},\n    \"date\": \"{{invalidAppointmentDate}}\",\n    \"reason\": \"Test Invalid Pet\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/appointments",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"appointments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Appointments",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"console.log('\\n=== GET ALL APPOINTMENTS TEST RESULTS ===');",
+									"",
+									"// Test status code",
+									"pm.test('Status code is 200 OK', function () {",
+									"    pm.response.to.have.status(200);",
+									"    console.log('✅ Status: 200 OK');",
+									"});",
+									"",
+									"// Test response time",
+									"pm.test('Response time is less than 500ms', function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(500);",
+									"    console.log(`✅ Response time: ${pm.response.responseTime}ms`);",
+									"});",
+									"",
+									"// Parse response",
+									"const responseJson = pm.response.json();",
+									"",
+									"// Test response structure",
+									"pm.test('Response is an array', function () {",
+									"    pm.expect(responseJson).to.be.an('array');",
+									"    console.log(`✅ Response is array with ${responseJson.length} appointments`);",
+									"});",
+									"",
+									"// Test if appointments exist",
+									"if (responseJson.length > 0) {",
+									"    pm.test('Appointments have required fields', function () {",
+									"        const firstAppointment = responseJson[0];",
+									"        pm.expect(firstAppointment).to.have.property('id');",
+									"        pm.expect(firstAppointment).to.have.property('petId');",
+									"        pm.expect(firstAppointment).to.have.property('date');",
+									"        pm.expect(firstAppointment).to.have.property('reason');",
+									"        console.log('✅ Appointment structure is valid');",
+									"    });",
+									"    ",
+									"    // Check if our created appointment exists",
+									"    const createdAppointmentId = pm.collectionVariables.get('appointmentId');",
+									"    if (createdAppointmentId) {",
+									"        const createdAppointment = responseJson.find(apt => apt.id == createdAppointmentId);",
+									"        pm.test('Created appointment exists in the list', function () {",
+									"            pm.expect(createdAppointment).to.not.be.undefined;",
+									"            console.log(`✅ Created appointment (ID: ${createdAppointmentId}) found in list`);",
+									"        });",
+									"    }",
+									"    ",
+									"    console.log('📋 All appointments:');",
+									"    responseJson.forEach((appointment, index) => {",
+									"        const date = new Date(appointment.date).toLocaleString();",
+									"        console.log(`  ${index + 1}. Pet ID: ${appointment.petId} | Date: ${date} | Reason: ${appointment.reason} [ID: ${appointment.id}]`);",
+									"    });",
+									"} else {",
+									"    console.log('ℹ️ No appointments found in the system');",
+									"}",
+									"",
+									"console.log('=== END GET ALL APPOINTMENTS TEST ===\\n');"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/appointments",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"appointments"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Operations related to appointment management"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"console.log('🚀 Starting PetClinic API request to:', pm.request.url.toString());",
+					"console.log('📍 Method:', pm.request.method);"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"console.log('📊 Request completed in', pm.response.responseTime, 'ms');"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "petName",
+			"value": "Buddy"
+		},
+		{
+			"key": "petSpecies",
+			"value": "Dog"
+		},
+		{
+			"key": "petOwner",
+			"value": "John Smith"
+		},
+		{
+			"key": "petId",
+			"value": "1"
+		},
+		{
+			"key": "appointmentReason",
+			"value": "Annual Checkup"
+		},
+		{
+			"key": "appointmentDate",
+			"value": "2024-01-15T10:00:00"
+		},
+		{
+			"key": "appointmentId",
+			"value": "1"
+		},
+		{
+			"key": "invalidPetId",
+			"value": "99999"
+		},
+		{
+			"key": "invalidAppointmentDate",
+			"value": "2024-01-20T14:00:00"
+		}
+	]
+}
