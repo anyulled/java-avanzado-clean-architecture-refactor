@@ -1,6 +1,6 @@
 package dev.arol.petclinic.repository;
 
-import dev.arol.petclinic.entity.Pet;
+import dev.arol.petclinic.domain.model.Pet;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

@@ -1,9 +1,10 @@
 package dev.arol.petclinic.service;
 
-import dev.arol.petclinic.entity.Pet;
+import dev.arol.petclinic.domain.model.Pet;
 import dev.arol.petclinic.repository.IPetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
