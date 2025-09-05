@@ -46,9 +46,11 @@ public class PetJpaEntity {
 
     }
 
+    //<editor-fold desc="Mapper">
     public static PetJpaEntity fromDomain(Pet pet) {
         return TO_ENTITY_MAPPER.map(pet);
     }
+    //</editor-fold>
 
     //<editor-fold desc="Getters and setters">
     public Long getId() {

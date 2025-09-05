@@ -1,7 +1,7 @@
 package dev.arol.petclinic.adapter.out.persistence;
 
+import dev.arol.petclinic.application.port.out.PetRepository;
 import dev.arol.petclinic.domain.model.Pet;
-import dev.arol.petclinic.repository.IPetRepository;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
 @Profile("inmemory")
-public class InMemoryPetRepository implements IPetRepository {
+public class InMemoryPetRepository implements PetRepository {
 
     private final ConcurrentHashMap<Long, Pet> pets = new ConcurrentHashMap<>();
     private final AtomicLong idGenerator = new AtomicLong(1);
@@ -44,13 +44,4 @@ public class InMemoryPetRepository implements IPetRepository {
         return pets.containsKey(id);
     }
 
-    @Override
-    public void deleteById(Long id) {
-        pets.remove(id);
-    }
-
-    @Override
-    public long count() {
-        return pets.size();
-    }
 }
