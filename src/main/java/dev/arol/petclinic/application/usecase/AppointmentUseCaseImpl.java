@@ -5,18 +5,14 @@ import dev.arol.petclinic.application.port.in.GetAppointmentUseCase;
 import dev.arol.petclinic.application.port.out.AppointmentRepository;
 import dev.arol.petclinic.application.port.out.PetRepository;
 import dev.arol.petclinic.domain.model.Appointment;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public class AppointmentUseCaseImpl implements CreateAppointmentUseCase, GetAppointmentUseCase {
 
     AppointmentRepository appointmentRepository;
     private final PetRepository petRepository;
 
-    @Autowired
     public AppointmentUseCaseImpl(AppointmentRepository appointmentRepository, PetRepository petRepository) {
         this.appointmentRepository = appointmentRepository;
         this.petRepository = petRepository;

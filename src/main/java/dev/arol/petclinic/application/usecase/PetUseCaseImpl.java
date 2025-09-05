@@ -5,11 +5,9 @@ import dev.arol.petclinic.application.port.in.GetPetUseCase;
 import dev.arol.petclinic.application.port.in.PetExistsUseCase;
 import dev.arol.petclinic.application.port.out.PetRepository;
 import dev.arol.petclinic.domain.model.Pet;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public class PetUseCaseImpl implements CreatePetUseCase, GetPetUseCase, PetExistsUseCase {
 
     private final PetRepository petRepository;
