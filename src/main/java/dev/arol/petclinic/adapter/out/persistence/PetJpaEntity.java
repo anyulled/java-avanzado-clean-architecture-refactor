@@ -1,28 +1,15 @@
 package dev.arol.petclinic.adapter.out.persistence;
 
-import dev.arol.petclinic.domain.model.Pet;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import ma.glasnost.orika.BoundMapperFacade;
-import ma.glasnost.orika.MapperFactory;
-import ma.glasnost.orika.impl.DefaultMapperFactory;
 
 @Entity
 @Table(name = "pets")
 public class PetJpaEntity {
-
-    private static final MapperFactory MAPPER_FACTORY = new DefaultMapperFactory.Builder().build();
-    private static final BoundMapperFacade<PetJpaEntity, Pet> TO_DOMAIN_MAPPER;
-    private static final BoundMapperFacade<Pet, PetJpaEntity> TO_ENTITY_MAPPER;
-
-    static {
-        TO_DOMAIN_MAPPER = MAPPER_FACTORY.getMapperFacade(PetJpaEntity.class, Pet.class);
-        TO_ENTITY_MAPPER = MAPPER_FACTORY.getMapperFacade(Pet.class, PetJpaEntity.class);
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,12 +32,6 @@ public class PetJpaEntity {
     public PetJpaEntity() {
 
     }
-
-    //<editor-fold desc="Mapper">
-    public static PetJpaEntity fromDomain(Pet pet) {
-        return TO_ENTITY_MAPPER.map(pet);
-    }
-    //</editor-fold>
 
     //<editor-fold desc="Getters and setters">
     public Long getId() {
@@ -89,10 +70,4 @@ public class PetJpaEntity {
         this.ownerName = ownerName;
         return this;
     }
-
-    //<editor-fold desc="Mapper">
-    public Pet toDomain() {
-        return TO_DOMAIN_MAPPER.map(this);
-    }
-    //</editor-fold>
 }

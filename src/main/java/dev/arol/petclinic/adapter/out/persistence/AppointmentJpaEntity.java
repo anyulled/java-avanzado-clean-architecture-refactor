@@ -1,31 +1,17 @@
 package dev.arol.petclinic.adapter.out.persistence;
 
-import dev.arol.petclinic.domain.model.Appointment;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import ma.glasnost.orika.BoundMapperFacade;
-import ma.glasnost.orika.MapperFactory;
-import ma.glasnost.orika.impl.DefaultMapperFactory;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "appointments")
 public class AppointmentJpaEntity {
-
-    private static final MapperFactory MAPPER_FACTORY = new DefaultMapperFactory.Builder().build();
-    private static final BoundMapperFacade<AppointmentJpaEntity, Appointment> TO_DOMAIN_MAPPER;
-    private static final BoundMapperFacade<Appointment, AppointmentJpaEntity> TO_ENTITY_MAPPER;
-
-    static {
-        TO_DOMAIN_MAPPER = MAPPER_FACTORY.getMapperFacade(AppointmentJpaEntity.class, Appointment.class);
-        TO_ENTITY_MAPPER = MAPPER_FACTORY.getMapperFacade(Appointment.class, AppointmentJpaEntity.class);
-
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,10 +31,6 @@ public class AppointmentJpaEntity {
         this.petId = petId;
         this.date = date;
         this.reason = reason;
-    }
-
-    public static AppointmentJpaEntity fromDomain(Appointment appointment) {
-        return TO_ENTITY_MAPPER.map(appointment);
     }
 
     //<editor-fold desc="getters & setters">
@@ -83,9 +65,5 @@ public class AppointmentJpaEntity {
 
     public void setReason(String reason) {
         this.reason = reason;
-    }
-
-    public Appointment toDomain() {
-        return TO_DOMAIN_MAPPER.map(this);
     }
 }
