@@ -1,7 +1,10 @@
 package dev.arol.petclinic.domain.model;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 
 
 class PetTest {
@@ -9,19 +12,19 @@ class PetTest {
     @Test
     void isValidForAppointment() {
         var pet = new Pet(null, "Buddy", "Dog", "John Smith");
-        Assertions.assertThat(pet.isValidForAppointment()).isTrue();
+        assertThat(pet.isValidForAppointment()).isTrue();
     }
 
     @Test
     void isNotValidForAppointment() {
         var pet = new Pet(null, null, "Dog", "John Smith");
-        Assertions.assertThat(pet.isValidForAppointment()).isFalse();
+        assertThat(pet.isValidForAppointment()).isFalse();
     }
 
     @Test
     void validateForCreationThrowsExceptionWhenNameIsNull() {
         var pet = new Pet(null, null, "German Shepperd", "Owner");
-        Assertions.assertThatExceptionOfType(IllegalArgumentException.class)
+        assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(pet::validateForCreation)
                 .withMessageContaining("Pet name is required");
     }
@@ -29,7 +32,7 @@ class PetTest {
     @Test
     void validateForCreationThrowsExceptionWhenNameIsEmpty() {
         var pet = new Pet(null, "", "German Shepperd", "Owner");
-        Assertions.assertThatExceptionOfType(IllegalArgumentException.class)
+        assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(pet::validateForCreation)
                 .withMessageContaining("Pet name is required");
     }
@@ -37,6 +40,6 @@ class PetTest {
     @Test
     void validateForCreationIsSuccessful() {
         var pet = new Pet(null, "Buddy", "Dog", "John Smith");
-        Assertions.assertThatNoException().isThrownBy(pet::validateForCreation);
+        assertThatNoException().isThrownBy(pet::validateForCreation);
     }
 }
