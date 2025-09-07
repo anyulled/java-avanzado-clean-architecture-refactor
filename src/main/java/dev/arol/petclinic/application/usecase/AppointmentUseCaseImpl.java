@@ -10,7 +10,7 @@ import java.util.List;
 
 public class AppointmentUseCaseImpl implements CreateAppointmentUseCase, GetAppointmentUseCase {
 
-    AppointmentRepository appointmentRepository;
+    private final AppointmentRepository appointmentRepository;
     private final PetRepository petRepository;
 
     public AppointmentUseCaseImpl(AppointmentRepository appointmentRepository, PetRepository petRepository) {
