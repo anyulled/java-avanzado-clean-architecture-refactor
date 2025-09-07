@@ -14,6 +14,9 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -41,6 +44,10 @@ class AppointmentUseCaseImplTest {
                 .returns(1L, Appointment::petId)
                 .returns("annual check", Appointment::reason)
                 .returns(now, Appointment::date);
+
+        verify(appointmentRepository, times(1)).save(appointment);
+        verifyNoMoreInteractions(appointmentRepository);
+        verify(petRepository, times(1)).existsById(appointment.petId());
     }
 
     @Test
@@ -52,6 +59,9 @@ class AppointmentUseCaseImplTest {
         assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(() -> useCase.createAppointment(appointment))
                 .withMessageContaining("Pet with ID 1 does not exist");
+
+        verify(petRepository, times(1)).existsById(appointment.petId());
+        verifyNoMoreInteractions(petRepository);
     }
 
     @Test
@@ -65,5 +75,8 @@ class AppointmentUseCaseImplTest {
                 .isNotNull()
                 .hasSize(2)
                 .containsExactlyElementsOf(appointments);
+
+        verify(appointmentRepository, times(1)).findAll();
+        verifyNoMoreInteractions(appointmentRepository);
     }
 }
