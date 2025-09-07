@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.testcontainers.context.ImportTestcontainers;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -14,6 +15,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
+@ImportTestcontainers
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import({AppointmentRepositoryAdapter.class, dev.arol.petclinic.adapter.out.persistence.mapper.AppointmentMapperTestImpl.class})
 @ActiveProfiles("postgres")
@@ -23,7 +25,7 @@ class AppointmentRepositoryAdapterTest extends PostgresContainerTestConfig {
     private AppointmentRepositoryAdapter adapter;
 
     @Autowired
-    private AppoinmentRepositoryJpa jpa;
+    private AppointmentRepositoryJpa jpa;
 
     @Test
     void save() {

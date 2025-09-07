@@ -12,10 +12,10 @@ import java.util.List;
 @Profile({"h2", "postgres"})
 public class AppointmentRepositoryAdapter implements AppointmentRepository {
 
-    private final AppoinmentRepositoryJpa appointmentRepositoryJpa;
+    private final AppointmentRepositoryJpa appointmentRepositoryJpa;
     private final AppointmentMapper mapper;
 
-    public AppointmentRepositoryAdapter(AppoinmentRepositoryJpa appointmentRepositoryJpa,
+    public AppointmentRepositoryAdapter(AppointmentRepositoryJpa appointmentRepositoryJpa,
                                         AppointmentMapper mapper) {
         this.appointmentRepositoryJpa = appointmentRepositoryJpa;
         this.mapper = mapper;
