@@ -18,6 +18,7 @@ public class PetUseCaseImpl implements CreatePetUseCase, GetPetUseCase, PetExist
 
     @Override
     public Pet createPet(Pet pet) {
+        pet.validateForCreation();
         return petRepository.save(pet);
     }
 
